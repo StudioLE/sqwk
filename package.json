@@ -1,5 +1,5 @@
 {
-  "name": "squawk-log",
+  "name": "sqwk",
   "version": "0.1.0",
   "description": "A utility to combine and enhance CLI and GUI application output",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/StudioLE/squawk"
+    "url": "https://github.com/StudioLE/sqwk"
   },
   "keywords": [
     "log",
@@ -19,9 +19,9 @@
   "author": "Laurence Elsdon",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/StudioLE/squawk/issues"
+    "url": "https://github.com/StudioLE/sqwk/issues"
   },
-  "homepage": "https://github.com/StudioLE/squawk",
+  "homepage": "https://github.com/StudioLE/sqwk",
   "dependencies": {
     "chalk": "^0.5.1"
   }

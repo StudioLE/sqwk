@@ -1,4 +1,4 @@
-# Squawk Log
+# Sqwk
 
 A utility to combine and enhance CLI and GUI application output.
 
@@ -10,6 +10,6 @@ Installation will be via `npm`
 
 ## Usage
 
-`sqwk = require('squawk')`
+`sqwk = require('sqwk')`
 
 For documentation/examples refer to `example.js`
