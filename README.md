@@ -6,10 +6,12 @@ When creating my first command line applications in Node.JS I found myself in ne
 
 ## Installation
 
-Installation will be via `npm`
+Installation via [npm](https://www.npmjs.com/package/sqwk)
+
+`npm install sqwk`
 
 ## Usage
 
 `sqwk = require('sqwk')`
 
-For documentation/examples refer to `example.js`
+For documentation/examples refer to [example.js](https://github.com/StudioLE/sqwk/blob/master/example.js)
