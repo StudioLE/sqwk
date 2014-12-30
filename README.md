@@ -12,4 +12,4 @@ Installation will be via `npm`
 
 `sqwk = require('squawk')`
 
-For documentation Refer to `example.js`
+For documentation/examples refer to `example.js`
