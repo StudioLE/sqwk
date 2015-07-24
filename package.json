@@ -1,6 +1,6 @@
 {
   "name": "sqwk",
-  "version": "0.2.0-alpha",
+  "version": "0.2.1-alpha",
   "description": "A utility to combine and enhance CLI and GUI application output",
   "keywords": [
     "log",
@@ -27,7 +27,7 @@
     "lodash": "^3.10.0",
     "terminal-menu": "^2.1.1"
   },
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
