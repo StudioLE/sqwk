@@ -1,229 +1,128 @@
 // Node modules
+var _ = require('lodash')
+var t_menu = require('terminal-menu')
 var chalk = require('chalk')
 
+// Globals
+var terminal
+
+/**
+ * @exports sqwk
+ */
 module.exports = {
 
-	/**
-	 * The array to store our logs in
-	 *
-	 * @property logs
-	 * @type array
-	 * @default []
-	 */
-	logs: [],
-	
-	/**
-	 * An object of the default styles and their shortcodes
-	 *
-	 * @property styles
-	 * @type Object
-	 * @default 
-	 */
-	styles: {
-		'{bold}': 'bold',
-		'{dim}': 'dim',
-		'{italic}': 'italic',
-		'{underline}': 'underline',
-		'{inverse}': 'inverse',
-		'{hidden}': 'hidden',
-		'{strikethrough}': 'strikethrough',
+  /**
+   * Options
+   *
+   * @var {Object} options
+   */
+  options: require('./lib/options'),
 
-		'{black}': 'black',
-		'{red}': 'red',
-		'{green}': 'green',
-		'{yellow}': 'yellow',
-		'{blue}': 'blue',
-		'{magenta}': 'magenta',
-		'{cyan}': 'cyan',
-		'{white}': 'white',
-		'{gray}': 'gray',
+  /**
+   * Set options and capture user input
+   *
+   * @method init
+   * @param {Object} options Options
+   */
+  init: function(user_opts) {
 
-		'{bgBlack}': 'bgBlack',
-		'{bgRed}': 'bgRed',
-		'{bgGreen}': 'bgGreen',
-		'{bgYellow}': 'bgYellow',
-		'{bgBlue}': 'bgBlue',
-		'{bgMagenta}': 'bgMagenta',
-		'{bgCyan}': 'bgCyan',
-		'{bgWhite}': 'bgWhite'
-	},
+    // Set options
+    this.options = _.defaults(user_opts, this.options)
 
-	/**
-	 * Add a line or array of lines to the log
-	 * 
-	 * @method log
-	 * @param message {string, array}
-	 * @return 
-	 */
-	log: function(message) {
-		if(Array.isArray(message)) {
-			for(var i in message) {
-				// If an array within an array
-				if(Array.isArray(message[i])) {
-					this.add_array(message[i])
-				}
-				else {
-					this.add(message[i])
-				}
-			}
-			//this.logs = this.logs.concat(message)
-		}
-		else {
-			this.add(message)
-		}
-	},
+    // Set title
+    // this.options.title = chalk.bold(this.options.title)
 
-	/**
-	 * Return a horizontal rule
-	 * 
-	 * @method hr
-	 * @param num {int} Number of characters in rule
-	 * @return {string}
-	 */
-	hr: function(num) {
-		num = 60
-		var hr = ''
-		for(var i = 0; i < num; i ++) {
-			hr = hr + '-'
-		}
-		return hr
-	},
+    // Without this, we would only get streams once enter is pressed
+    process.stdin.setRawMode(true)
+    // Resume stdin in the parent process (node app won't quit all by itself
+    // unless an error or process.exit() happens)
+    process.stdin.resume()
+  },
 
-	/*
-	 * Parse the message and then add it to the log array
-	 * 
-	 * @method add
-	 * @param message {string}
-	 * @return 
-	 */
-	add: function(message) {
-		// @todo Replace this method with searching for a key in an object
-		if(message == '<hr>' || message == '{hr}') {
-			message = this.hr()
-		}
-		this.logs.push(message)
-	},
+  /**
+   * Write a message or menu to the terminal
+   *
+   * @method write
+   * @param {String|Array} message Message or messages
+   * @param {Array} options Selectable menu options
+   * @param {Function} callback
+   * @return {Object} Terminal object
+   */
+  write: function(message, options, callback) {
+    // If no callback given create one
+    if( ! callback) callback = function() {}
 
-	/**
-	 * Parse a stripe array and add it to the log
-	 * 
-	 * @method add_array
-	 * @param message {array}
-	 * @return 
-	 */
-	add_array: function(message) {
-		// Check to see if the first item in the array is a shortcode for a style
-		if(this.styles[message[0]] == undefined) {
-			color = 'white'
-		}
-		else {
-			color = this.styles[message.shift()]
-		}
-		// Run stripe across the remaining elements in the array
-		this.stripe(message, color)
-	},
+    // If a previous terminal has been opened then close it
+    if(terminal) terminal.close()
 
-	/**
-	 * Clear the log array
-	 * 
-	 * @method clear
-	 * @return 
-	 */
-	clear: function() {
-		this.logs = []
-	},
+    terminal = t_menu(this.options.menu)
 
-	/**
-	 * Append message, return and then clear the logs
-	 * 
-	 * @method return
-	 * @param message {string, array}
-	 * @return logs
-	 */
-	return: function(message) {
-		if(message) {
-			this.ln(message)
-		}
-		logs = []
-		for(var i in this.logs) {
-			logs.push(chalk.gray(this.logs[i]))
-		}
-		this.clear()
-		return logs
-	},
+    // Reset the terminal, clearing all contents
+    if(this.options.reset) terminal.reset()
 
-	/**
-	 * Send the logs to the terminal with the appended message then clear logs
-	 * 
-	 * @method send
-	 * @param message {string, array}
-	 * @return 
-	 */
-	send: function(message) {
-		logs = this.return(message)
-		for(var i in logs) {
-			console.log(logs[i])
-		}
-	},
+    terminal.write(this.options.title + '\n\n')
 
-	/**
-	 * Apply alternate colours to each item in an array before joining them together and adding to the log
-	 * 
-	 * @method stripe
-	 * @param message {string, array} The message to stripe
-	 * @return 
-	 */
-	stripe: function(message, style) {
-		// If the message is an array join with a zebra color effect
-		// red grey red grey etc
-		if(Array.isArray(message)) {
-			for(var i in message) {
-				if(i % 2 == 0) {
-					message[i] = chalk[style](message[i])
-				}
-			}
-			message = message.join(' ')
-		}
-		else {
-			message = chalk[style](message)
-		}
-		this.ln(message)
-	},
+    // Write message or messages to the console
+    if(_.isString(message)) message = [message]
+    _.each(message, function(message) {
+      terminal.write(chalk.bold(message + '\n'))
+    })
 
-	/**
-	 * Send an error to the console
-	 * 
-	 * @method error
-	 * @param message {string, array} The error message
-	 * @param exit {boolean} Exit the program?
-	 * @return 
-	 */
-	error: function(message, exit) {
-		this.stripe(message, 'red')
-		this.send()
-		if(exit) process.exit()
-	},
+    terminal.write('\n')
 
-	/**
-	 * Deprecated. Wrapper for log method
-	 * 
-	 * @method ln
-	 * @param message {string, array}
-	 * @return 
-	 */
-	ln: function(message) {
-		return this.log(message)
-	},
+    // If options were given write them to the console
+    if(options) {
+      _.each(options, function(option) {
+        terminal.add(option)
+      })
 
-	/**
-	 * Deprecated. Wrapper for stripe method
-	 * 
-	 * @method zebra
-	 * @param message {string, array} The message to stripe
-	 * @return 
-	 */
-	zebra: function(message, style) {
-		return this.stripe(message, style)
-	}
+      terminal.write('\n')
+      terminal.add('Cancel')
+    }
 
+    // Pipe the terminal menu to the console
+    process.stdin.pipe(terminal.createStream()).pipe(process.stdout)
+
+    // Run callback when a terminal item is selected
+    terminal.on('select', function(item, index) {
+      if(item == 'Cancel') return callback(Error('Cancelled by user'))
+      callback(null, item, index)
+    })
+
+    terminal.on('error', function(err) {
+      callback(err)
+    })
+
+    process.stdin.on('error', function(err) {
+      callback(err)
+    })
+
+    return terminal
+  },
+
+  /**
+   * Close terminal and exit process
+   *
+   * @method end
+   * @param {Object} err Error
+   * @param {Boolean} exit Exit process?
+   */
+  end: function(err, exit) {
+    // Close the terminal
+    if(terminal) terminal.close()
+
+    // If there was an error throw it before exit
+    if(err) throw err
+
+    // process.stdin.resume() prevents node from exiting.
+    // process.exit() overrides in more cases than stdin.pause() or stdin.end()
+    // it also means we don't need to call process.stdin.setRawMode(false)
+    if(exit === undefined || exit) {
+      process.exit()
+    }
+    else {
+      process.stdin.setRawMode(false)
+      process.stdin.end()
+    }
+  }
 }

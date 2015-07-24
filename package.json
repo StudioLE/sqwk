@@ -1,15 +1,7 @@
 {
   "name": "sqwk",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha",
   "description": "A utility to combine and enhance CLI and GUI application output",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/StudioLE/sqwk"
-  },
   "keywords": [
     "log",
     "output",
@@ -21,12 +13,22 @@
     "email": "hi@studiole.uk",
     "url": "https://studiole.uk"
   },
-  "license": "MIT",
+  "homepage": "https://github.com/StudioLE/sqwk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudioLE/sqwk"
+  },
   "bugs": {
     "url": "https://github.com/StudioLE/sqwk/issues"
   },
-  "homepage": "https://github.com/StudioLE/sqwk",
+  "license": "MIT",
   "dependencies": {
-    "chalk": "^0.5.1"
+    "chalk": "^1.1.0",
+    "lodash": "^3.10.0",
+    "terminal-menu": "^2.1.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
