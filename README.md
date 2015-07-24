@@ -29,7 +29,7 @@ npm install --save sqwk
 Or for the latest development release
 
 ```
-npm install --save https://github.com/StudioLE/sqwk.git
+npm install --save https://github.com/StudioLE/sqwk/archive/master.tar.gz
 ```
 
 ## Usage
@@ -49,13 +49,13 @@ sqwk.end()
 
 The following options can be passed as an object via 
 
-```
+```js
 sqwk.init({
   // Options
 })
 ```
 
-- `title` `(String)` Title
+- `title` `(String|False)` Title
 - `reset` `(Boolean)` Clear console before each write?
 - `menu` `(Object)` Options passed to terminal-menu
 - `formatTitle` `(function)` A function to format the title

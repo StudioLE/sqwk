@@ -60,7 +60,7 @@ module.exports = {
     // Reset the terminal, clearing all contents
     if(this.options.reset) terminal.reset()
 
-    terminal.write(this.options.title + '\n\n')
+    if(this.options.title) terminal.write(this.options.formatTitle() + '\n\n')
 
     // Write message or messages to the console
     if(_.isString(message)) message = [message]
